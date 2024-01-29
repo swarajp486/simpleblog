@@ -15,6 +15,7 @@ const fs = require('fs');
 app.use('/uploads',express.static(__dirname+'/uploads'))
 
 
+// Connect to mongodb database
 
 const MONGODB='mongodb+srv://swarajp486:P3tlNmxYnHvewBzA@cluster0.efbhsd8.mongodb.net/'
 mongoose
@@ -34,6 +35,7 @@ mongoose
 const port = process.env.PORT
 
 
+//Register user 
 
 app.post('/api/post/register',async (req,res)=>{
 
@@ -63,6 +65,7 @@ app.post('/api/post/register',async (req,res)=>{
     
 })
 
+// Login user
 
 app.post('/api/post/login',async (req,res)=>{
   try {
@@ -85,6 +88,7 @@ app.post('/api/post/login',async (req,res)=>{
 }
 )
 
+//Create new post
 
 app.post('/api/post/blog' ,uploadMiddleware.single('file'), async (req,res) => {
   
@@ -117,6 +121,7 @@ app.post('/api/post/blog' ,uploadMiddleware.single('file'), async (req,res) => {
 
 });
 
+// Get all post at same time to show on home paage
 
 app.get('/api/post/blog',async (req,res)=>{
  const posts=await Post.find().populate('author',['username']).sort({createdAt:-1})
@@ -124,12 +129,15 @@ app.get('/api/post/blog',async (req,res)=>{
  res.json(posts)
 })
 
+// fetch a post of particular person by thier unique id
 app.get('/api/post/blog/:id',async (req,res)=>{
   const {id}=req.params
   const postDoc= await Post.findById({_id:id}).populate('author',['username'])
  
   res.json(postDoc)
 })
+
+// Updateing Post
 
 
 app.put('/api/post/blog',uploadMiddleware.single('file'), async (req,res) => {
